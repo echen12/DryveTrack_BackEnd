@@ -1,12 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DryveTrack_BackEnd.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace DryveTrack_BackEnd.Controllers
 {
-    public class VehicleController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class VehicleController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly DryveTrackAPIDBContext _dbContext;
+        public VehicleController(DryveTrackAPIDBContext dbContext) 
         {
-            return View();
+            _dbContext = dbContext;
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult GetVehicles()
+        {
+            return Ok(_dbContext.Vehicle.ToList());
         }
     }
 }
