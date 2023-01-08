@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DryveTrackBackEnd.Migrations
 {
     [DbContext(typeof(DryveTrackAPIDBContext))]
-    [Migration("20230107020555_InitialMigration")]
+    [Migration("20230108080604_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -24,6 +24,92 @@ namespace DryveTrackBackEnd.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DryveTrack_BackEnd.Models.Insurance", b =>
+                {
+                    b.Property<Guid>("InsuranceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("InsuranceExpiryDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InsuranceProvider")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LicensePlate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("InsuranceId");
+
+                    b.ToTable("Insurance");
+                });
+
+            modelBuilder.Entity("DryveTrack_BackEnd.Models.Odometer", b =>
+                {
+                    b.Property<Guid>("OdometerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LastUpdated")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OilChangeStartInterval")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VIN")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("lastMileage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("OdometerId");
+
+                    b.ToTable("Odometer");
+                });
+
+            modelBuilder.Entity("DryveTrack_BackEnd.Models.UserVehicle", b =>
+                {
+                    b.Property<Guid>("UserVehicleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("User")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Vehicle")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserVehicleId");
+
+                    b.ToTable("UserVehicle");
+                });
+
+            modelBuilder.Entity("DryveTrack_BackEnd.Models.Users", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
+                });
 
             modelBuilder.Entity("DryveTrack_BackEnd.Models.Vehicle", b =>
                 {
@@ -43,16 +129,58 @@ namespace DryveTrackBackEnd.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Odometer")
-                        .HasColumnType("int");
+                    b.Property<string>("ModelYear")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("Odometer")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("VIN")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VehicleType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VehicleId");
 
                     b.ToTable("Vehicle");
+                });
+
+            modelBuilder.Entity("DryveTrack_BackEnd.Models.VehicleInsurance", b =>
+                {
+                    b.Property<Guid>("VehicleInsuranceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("InsuranceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("VehicleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("VehicleInsuranceId");
+
+                    b.ToTable("VehicleInsurances");
+                });
+
+            modelBuilder.Entity("DryveTrack_BackEnd.Models.VehicleOdometer", b =>
+                {
+                    b.Property<Guid>("VehicleOdometerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OdometerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("VehicleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("VehicleOdometerId");
+
+                    b.ToTable("VehicleOdometer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>

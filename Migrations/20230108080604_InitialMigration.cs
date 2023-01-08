@@ -37,6 +37,61 @@ namespace DryveTrackBackEnd.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Insurance",
+                columns: table => new
+                {
+                    InsuranceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LicensePlate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InsuranceExpiryDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InsuranceProvider = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Insurance", x => x.InsuranceId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Odometer",
+                columns: table => new
+                {
+                    OdometerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VIN = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastUpdated = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    lastMileage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OilChangeStartInterval = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Odometer", x => x.OdometerId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserVehicle",
+                columns: table => new
+                {
+                    UserVehicleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    User = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Vehicle = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserVehicle", x => x.UserVehicleId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Vehicle",
                 columns: table => new
                 {
@@ -44,12 +99,40 @@ namespace DryveTrackBackEnd.Migrations
                     VIN = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Make = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModelYear = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VehicleType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Odometer = table.Column<int>(type: "int", nullable: false)
+                    Odometer = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vehicle", x => x.VehicleId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VehicleInsurances",
+                columns: table => new
+                {
+                    VehicleInsuranceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VehicleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    InsuranceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VehicleInsurances", x => x.VehicleInsuranceId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VehicleOdometer",
+                columns: table => new
+                {
+                    VehicleOdometerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VehicleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OdometerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VehicleOdometer", x => x.VehicleOdometerId);
                 });
 
             migrationBuilder.CreateTable(
@@ -149,7 +232,25 @@ namespace DryveTrackBackEnd.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Insurance");
+
+            migrationBuilder.DropTable(
+                name: "Odometer");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "UserVehicle");
+
+            migrationBuilder.DropTable(
                 name: "Vehicle");
+
+            migrationBuilder.DropTable(
+                name: "VehicleInsurances");
+
+            migrationBuilder.DropTable(
+                name: "VehicleOdometer");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
