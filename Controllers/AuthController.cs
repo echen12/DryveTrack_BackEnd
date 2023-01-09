@@ -2,20 +2,23 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using DryveTrack_BackEnd.Services;
+using DryveTrack_BackEnd.Data;
 
 namespace DryveTrack_BackEnd.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class AuthController : ControllerBase
     {
+        private readonly DryveTrackAPIDBContext _dbContext;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly JwtService _jwtService;
 
-        public UsersController(UserManager<IdentityUser> userManager, JwtService jwtService)
+        public AuthController(UserManager<IdentityUser> userManager, JwtService jwtService, DryveTrackAPIDBContext dbContext)
         {
             _userManager = userManager;
             _jwtService = jwtService;
+            _dbContext = dbContext;
         }
 
         [HttpGet("{username}")]
@@ -59,10 +62,18 @@ namespace DryveTrack_BackEnd.Controllers
 
             var token = _jwtService.CreateToken(user);
 
-            return Ok(token);
+
+
+            return Ok(new TestResponse
+            {
+                Token = token.Token,
+                UserId = new Guid(user.Id)
+            }
+            );
         }
 
         [HttpPost]
+        [Route("add-user")]
         public async Task<ActionResult<AuthUser>> PostUser(AuthUser user)
         {
             if (!ModelState.IsValid)
@@ -70,12 +81,23 @@ namespace DryveTrack_BackEnd.Controllers
                 return BadRequest(ModelState);
             }
 
+            var authUser = new IdentityUser { UserName = user.UserName, Email = user.Email };
+
             var result = await _userManager.CreateAsync(
-                new IdentityUser() { UserName = user.UserName, Email = user.Email },
+                authUser,
                 user.Password
             );
 
-            if (!result.Succeeded)
+
+            if (result.Succeeded)
+            {
+                var newUser = new Users { UserId = new Guid(authUser.Id), FirstName = user.FirstName, LastName = user.LastName };
+
+                await _dbContext.Users.AddAsync(newUser);
+                await _dbContext.SaveChangesAsync();
+            }
+
+            else if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
             }
@@ -84,6 +106,6 @@ namespace DryveTrack_BackEnd.Controllers
             return CreatedAtAction("GetUser", new { username = user.UserName }, user);
         }
 
-        
+
     }
 }
