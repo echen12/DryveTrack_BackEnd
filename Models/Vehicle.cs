@@ -12,6 +12,5 @@ namespace DryveTrack_BackEnd.Models
         public string ModelYear { get; set; }
         public string VehicleType { get; set; }
         public string Color { get; set; }
-        public Guid Odometer { get; set; }
     }
 }

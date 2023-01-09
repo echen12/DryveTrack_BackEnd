@@ -19,6 +19,7 @@ builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddDbContext<DryveTrackAPIDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DryveTrackApiConnectionString")));
 
+
 builder.Services
     .AddIdentityCore<IdentityUser>(options => {
         options.SignIn.RequireConfirmedAccount = false;
@@ -49,6 +50,17 @@ builder.Services
         };
     });
 
+var devCorsPolicy = "corsapp";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(devCorsPolicy, builder => {
+        builder.WithOrigins("https://localhost:7298").AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        //builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        //builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost");
+        //builder.SetIsOriginAllowed(origin => true);
+    });
+});
+
 
 
 var app = builder.Build();
@@ -64,6 +76,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("corsapp");
 
 app.MapControllers();
 
