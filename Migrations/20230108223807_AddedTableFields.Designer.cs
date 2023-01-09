@@ -4,6 +4,7 @@ using DryveTrack_BackEnd.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DryveTrackBackEnd.Migrations
 {
     [DbContext(typeof(DryveTrackAPIDBContext))]
-    partial class DryveTrackAPIDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230108223807_AddedTableFields")]
+    partial class AddedTableFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,6 +121,9 @@ namespace DryveTrackBackEnd.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("Insurance")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Make")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -129,6 +135,9 @@ namespace DryveTrackBackEnd.Migrations
                     b.Property<string>("ModelYear")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("Odometer")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("VIN")
                         .IsRequired()
